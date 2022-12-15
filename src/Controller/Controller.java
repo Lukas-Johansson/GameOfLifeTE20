@@ -1,11 +1,11 @@
 package Controller;
 
-import Model.*;
-import View.*;
+import Model.Model;
+import View.View;
 
 public class Controller implements Runnable{
-    Model model;
-    View view;
+    private Model model;
+    private View view;
 
     private Thread thread;
     private boolean running = false;
