@@ -16,10 +16,23 @@ public class Model {
     public void update() {
         x++;
         y++;
+        getRules();
     }
 
     public Shape[] getShapes() {
-        Point[] points = {new Point(5,5)};
+        Point[] points = {
+                new Point(5,5),
+                new Point(6,6),
+                new Point(6,7),
+                new Point(5,7),
+                new Point(4,7)
+        };
         return (Shape[])points;
+    }
+
+    public void getRules() {
+        for() {
+
+        }
     }
 }
