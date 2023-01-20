@@ -10,6 +10,16 @@ public class Point extends Shape {
     private int x;
     private int y;
 
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    private boolean isAlive;
+
     public Point(int x, int y) {
         this.x = x;
         this.y = y;

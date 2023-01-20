@@ -1,15 +1,15 @@
 package Controller;
 
-import Model.Model;
-import View.View;
+import Model.*;
+import View.*;
 
 public class Controller implements Runnable{
-    private Model model;
-    private View view;
+    Model model;
+    View view;
 
     private Thread thread;
     private boolean running = false;
-
+    int millisecondsPerFrame = 200;
 
     public Controller(Model m, View v) {
         this.model = m;
@@ -36,14 +36,12 @@ public class Controller implements Runnable{
     public void run() {
         view.setVisible();
 
-        //model.update();
-//        view.draw(model.getShapes());
 
         long startTime = System.currentTimeMillis();
         long lastUpdate = startTime;
         while (true) {
             view.draw(model.getShapes());
-            if (System.currentTimeMillis()-lastUpdate > 500) {
+            if (System.currentTimeMillis()-lastUpdate > millisecondsPerFrame) {
                 model.update();
                 lastUpdate = System.currentTimeMillis();
             }
