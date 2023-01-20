@@ -1,40 +1,38 @@
 package Model;
 import View.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Model {
     int width, height, isolation, overcrowding, revive;
     Point[][] activeGrid, nextGrid;
-    ArrayList<Point> cellsToDraw = new ArrayList<>();
+    List<Point> cellsToDraw = new ArrayList<>();
 
     public Model(int width, int height) {
         this.width = width;
         this.height = height;
-        activeGrid = new Point[width][height];
         isolation = 1;
         overcrowding = 4;
         revive = 3;
 
-        activeGrid = Grid();
+        activeGrid = createGrid();
         nextGrid = activeGrid;
 
         //Cellgrupp 1
-
-        Cells(15, 15);
-        Cells(16, 15);
-        Cells(17, 15);
-        Cells(15, 16);
-        Cells(16, 17);
+        createCells(15, 15);
+        createCells(16, 15);
+        createCells(17, 15);
+        createCells(15, 16);
+        createCells(16, 17);
 
         //Cellgrupp 2
-
-        Cells(20, 20);
-        Cells(21, 20);
-        Cells(22, 20);
+        createCells(20, 20);
+        createCells(21, 20);
+        createCells(22, 20);
     }
 
     public void update() {
-        nextGrid = Grid();
+        nextGrid = createGrid();
         cellsToDraw.clear();
         checkGrid();
         activeGrid = nextGrid;
@@ -43,31 +41,34 @@ public class Model {
     public void checkGrid() {
         for (int Y = 0; Y < height; Y++) {
             for (int X = 0; X < width; X++) {
-                int neighbours = 0;
+                int neighbours = countAliveNeighbours(X, Y);
+                Point point = activeGrid[X][Y];
 
-                if(activeGrid[X][Y].isAlive()) { cellsToDraw.add(activeGrid[X][Y]); }
-
-                for (int checkX = -1; checkX <= 1; checkX++) {
-                    for (int checkY = -1; checkY <= 1; checkY++) {
-                        if(X + checkX >= 0 && X + checkX < width && Y + checkY >= 0 && Y + checkY < height) {
-                            if(activeGrid[X + checkX][Y + checkY].isAlive()) { neighbours++; }
-                        }
-                    }
-                }
-
-                if(activeGrid[X][Y].isAlive()) {
-                    neighbours--;
+                if (point.isAlive()) {
+                    cellsToDraw.add(point);
                     nextGrid[X][Y].setAlive(neighbours > isolation && neighbours < overcrowding);
-                }
-
-                else {
+                } else {
                     nextGrid[X][Y].setAlive(neighbours == revive);
                 }
             }
         }
     }
 
-    public Point[][] Grid() {
+    private int countAliveNeighbours(int x, int y) {
+        int count = 0;
+        for (int checkX = -1; checkX <= 1; checkX++) {
+            for (int checkY = -1; checkY <= 1; checkY++) {
+                if (x + checkX >= 0 && x + checkX < width && y + checkY >= 0 && y + checkY < height) {
+                    if (activeGrid[x + checkX][y + checkY].isAlive()) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    private Point[][] createGrid() {
         Point[][] point = new Point[width][height];
         for (int Y = 0; Y < height; Y++) {
             for (int X = 0; X < width; X++) {
@@ -77,14 +78,12 @@ public class Model {
         return point;
     }
 
-    public void Cells(int x, int y) {
+    private void createCells(int x, int y) {
         nextGrid[x][y].setAlive(true);
         cellsToDraw.add(nextGrid[x][y]);
     }
 
-    public Shape[] getShapes() {
-        Point[] shape = new Point[cellsToDraw.size()];
-        cellsToDraw.toArray(shape);
-        return shape;
+    public Point[] getShapes() {
+        return cellsToDraw.toArray(new Point[0]);
     }
 }
